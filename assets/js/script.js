@@ -12,6 +12,8 @@ var answer2 = document.createElement("li");
 var answer3 = document.createElement("li");
 var answer4 = document.createElement("li");
 
+// var questionNumber = 0;
+
 
 var questions = [{
   question: 'Test question#1',
@@ -34,12 +36,21 @@ function startOver() {
   startPage.appendChild(body);
 }
 
-function createQuestionDiv(questionNumber){
-  questionTitle.textContent = (questions[questionNumber].question);
-  answer1.textContent = (questions[questionNumber].answer[0]);
-  answer2.textContent = (questions[questionNumber].answer[1]);
-  answer3.textContent = (questions[questionNumber].answer[2]);
-  answer4.textContent = (questions[questionNumber].answer[3]);
+function textAppendQuestionDiv(i){
+
+  var questionDiv = document.createElement("div");
+  var questionTitle = document.createElement("h2");
+  var answerList = document.createElement("ol");
+  var answer1 = document.createElement("li");
+  var answer2 = document.createElement("li");
+  var answer3 = document.createElement("li");
+  var answer4 = document.createElement("li");
+
+  questionTitle.textContent = (questions[i].question);
+  answer1.textContent = (questions[i].answer[0]);
+  answer2.textContent = (questions[i].answer[1]);
+  answer3.textContent = (questions[i].answer[2]);
+  answer4.textContent = (questions[i].answer[3]);
 
   body.appendChild(questionDiv);
   questionDiv.appendChild(questionTitle);
@@ -49,6 +60,26 @@ function createQuestionDiv(questionNumber){
   answerList.appendChild(answer3);
   answerList.appendChild(answer4);
   console.log(questionDiv);
+
 }
 
-createQuestionDiv(0);
+
+
+
+function startQuiz(){
+
+  for (i = 0; i < questions.length; i++) {
+    // var questionNumber = i;
+    console.log(i);
+    textAppendQuestionDiv(i);
+    questionDiv.remove();
+  }
+}
+
+startQuiz();
+
+// var questionNumber = 1; 
+
+// textAppendQuestionDiv(questionNumber - 1);
+
+
