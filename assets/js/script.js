@@ -1,8 +1,10 @@
 var body = document.body;
 
-var timerText = document.timer;
+var timerText = document.getElementById('timer');
 
 var startPage = document.createElement("div");
+var endPage = document.createElement("div");
+var highScores = document.createElement("div");
 
 var questionDiv = document.createElement("div");
 var questionTitle = document.createElement("h2");
@@ -63,10 +65,37 @@ function textAppendQuestionDiv(i){
 
 }
 
+function countdown(){
+  var timeLeft = 10;
 
+  // Use the setInterval method to call a function to be executed every 1000 milliseconds
+  var timeInterval = setInterval(function () {
+    if (timeLeft > 1) {
+      timerText.textContent = 'Time: ' + timeLeft + ' seconds remaining';
+      timeLeft--;
+    } else if (timeLeft === 1) {
+      timerText.textContent = 'Time: ' + timeLeft + ' second remaining';
+      timeLeft--;
+    } else {
+      timerText.textContent = 'Times up!';
+      clearInterval(timeInterval);
+      endQuiz();
+    }
+  }, 1000);
+}
+
+function endQuiz(){
+
+}
+
+function highScores(){
+
+
+}
 
 
 function startQuiz(){
+  countdown();
 
   for (i = 0; i < questions.length; i++) {
     // var questionNumber = i;
