@@ -1,31 +1,86 @@
 var questions = [{
-  question: 'Test question#1',
-  answer: ['Q1Answer#1', 'Q1Answer#2', 'Q1Answer#3', 'Q1Answer#4'],
-  correctAnswer: 0
+  question: 'Who had the top individual scoring game by a Jazz player?',
+  answer: ['Karl Malone', 'Pete Marovich', 'Donovan Mitchell', 'John Stockton'],
+  correctAnswer: 'Pete Marovich'
 },
 {
-  question: 'Test question#2',
-  answer: ['Q2Answer#1', 'Q2Answer#2', 'Q2Answer#3', 'Q2Answer#4'],
-  correctAnswer: 1
+  question: 'Who is the Jazz all-time leader in 3-point attempts and 3-pointers made?',
+  answer: ['John Stockton', 'Jeff Hornaceck', 'Kyle Korver', 'Joe Ingles'],
+  correctAnswer: 'John Stockton'
 },
 {
-  question: 'Test question#3',
-  answer: ['Q3Answer#1', 'Q3Answer#2', 'Q3Answer#3', 'Q3Answer#4'],
-  correctAnswer: 2
+  question: 'Which former Utah football player was nominated for the Heisman Trophy, and drafted number 1 in the 2005 NFL Draft?',
+  answer: ['Quinton Ganther', 'Eric Weddle', 'Alex Smith', 'Paris Warren'],
+  correctAnswer: 'Alex Smith'
 },
 {
-  question: 'Test question#4',
-  answer: ['Q4Answer#1', 'Q4Answer#2', 'Q4Answer#3', 'Q4Answer#4'],
-  correctAnswer: 3
+  question: 'Urban Meyer left the head coach position at the Utah Utes to become head coach of this team.',
+  answer: ['University of Miami', 'Bowling Green', 'Florida St.', 'University of Florida'],
+  correctAnswer: 'University of Florida'
+},
+{
+  question: 'What year did football become a program for the University of Utah?',
+  answer: ['1905', '1892', '1911', '1900'],
+  correctAnswer: '1892'
+},
+{
+  question: 'What was the original price tag for the Jazz as an expansion franchise in 1974?',
+  answer: ['$1.5 million', '$6.1 million', '47.8 million', '$120.2 million'],
+  correctAnswer: '$6.1 million'
+},
+{
+  question: 'Which current or former Jazz player’s father played on the 1984 NCAA Championship team with Michael Jordan at North Carolina?',
+  answer: ['Rudy Gobert', 'Dante Exum', 'Jordan Clarkson', 'Trey Lyles'],
+  correctAnswer: 'Dante Exum'
+},
+{
+  question: 'Which city were the Jazz located in before moving to Utah?',
+  answer: ['New Orleans', 'Atlanta', 'Austin', 'Memphis'],
+  correctAnswer: 'New Orleans'
+},
+{
+  question: 'Who was the head football coach for Utah from 1990-1998?',
+  answer: ['Jack Cutrice', 'Ron McBride', 'Urban Meyer', 'Ray Nagel'],
+  correctAnswer: 'Ron McBride'
+},
+{
+  question: 'When Utah first broke the BCS, they played against this team in this BCS Bowl Game.',
+  answer: ['Alabama/Sugar Bowl', 'Georgia Tech/Emerald Bowl', 'Tulsa/Armed Forces Bowl', 'Pittsburgh/Fiesta Bowl'],
+  correctAnswer: 'Pittsburgh/Fiesta Bowl'
 }];
 
-var questionCount = 1;
-var timeLeft = 59;
+var currentIndex = 0;
+var timeLeft;
+var currentAnswer;
+var currentScore;
+var highScore;
+var endPageInitials;
+var viewHighScores = document.querySelector("#high-scores");
 
-var currentAnswer = 0;
-var currentScore = 0;
-var highScore = 0;
+viewHighScores.addEventListener("click", function() {
+  highScores();
+});
 
+function startPage(){
+  var body = document.querySelector("main");
+  body.textContent = '';
+  var timerText = document.getElementById('timer');
+  timerText.textContent = 'Time: 1 Minute';
+  var startDiv = document.createElement("div");
+  var startTitle = document.createElement('h1');
+  var startMessage = document.createElement('h2');
+  var startButton = document.createElement('button');
+  startTitle.textContent = "Welcome to the Utah Sports Quiz";
+  startMessage.textContent = "Click below to start quiz";
+  startButton.textContent = "Start";
+  body.appendChild(startDiv);
+  startDiv.appendChild(startTitle);
+  startDiv.appendChild(startMessage);
+  startDiv.appendChild(startButton);
+  startButton.addEventListener("click", function() {
+    startQuiz();
+  });
+}
 
 function countdown(){
   var timerText = document.getElementById('timer');
@@ -39,7 +94,7 @@ function countdown(){
       timerText.textContent = 'Time: ' + timeLeft + ' second remaining';
       timeLeft--;
     } else {
-      if (questionCount === 4){
+      if (currentIndex === questions.length){
         timerText.textContent = 'Times up!';
         clearInterval(timeInterval);
         endQuiz();
@@ -52,158 +107,104 @@ function countdown(){
   }, 1000);
 }
 
-function textAppendQuestionDiv(i){
+function startQuiz(){
+  var timerText = document.getElementById('timer');
+  timerText.textContent = 'Time: 1 Minute';
+  timeLeft = 59;
+  currentAnswer = 0;
+  currentIndex = 0;
+  currentScore = 0;
+  countdown(timeLeft);
+  questionDiv();
+}
+
+function questionDiv(){
   var body = document.querySelector("main");
   body.textContent = '';
-
+  var currentQuestion = questions[currentIndex];
   var questionDiv = document.createElement("div");
   var questionTitle = document.createElement("h2");
   var answerList = document.createElement("ol");
-  
-  questionTitle.textContent = questions[i].question;
-  
-  for (var x = 0; x < questions[i].answer.length; x++) {
-    var answer = document.createElement("button");
-    answer.textContent = questions[i].answer[x];
-    answerList.appendChild(answer);
-    answer.addEventListener("click", function(event) {
-      if (timeLeft > 0 && questionCount < 4) {
-        currentAnswer = event.target;
-        console.log(currentAnswer);
-        textAppendQuestionDiv(questionCount);
-        if (currentAnswer === questions[questionCount].correctAnswer){
-          currentScore++;
-        }
-        questionCount++;
-      } else {
-        console.log(currentAnswer);
-        endQuiz();
-      }
-      
-    });
+    for (var x = 0; x < currentQuestion.answer.length; x++){
+      var answer = document.createElement("button");
+      answer.textContent = currentQuestion.answer[x];
+      answer.setAttribute("value", currentQuestion.answer[x]);
+      answer.onclick = buttonClick;
+      answerList.appendChild(answer);
+    }
+    questionTitle.textContent = currentQuestion.question;
+    questionDiv.appendChild(questionTitle);
+    questionDiv.appendChild(answerList);
+    body.appendChild(questionDiv);
+}
 
+function buttonClick(){
+  if (this.value === questions[currentIndex].correctAnswer ){
+    currentScore++;
+  } else {
+    timeLeft - 10;
   }
-
-  body.appendChild(questionDiv);
-  questionDiv.appendChild(questionTitle);
-  questionDiv.appendChild(answerList);
+  if (timeLeft <= 0 || currentIndex === questions.length - 1) {
+    endQuiz();
+  } 
+  else {
+    currentIndex++;
+    questionDiv()
+  }
 }
 
 function endQuiz(){
   timeLeft = 0;
   var body = document.querySelector("main");
   body.textContent = '';
-
   var timerText = document.getElementById('timer');
   timerText.textContent = 'Times up!';
-
   var endDiv = document.createElement("div");
   var endPageTitle = document.createElement('h1');
   var endPageScore = document.createElement('h2');
-  var endPageInitials = document.createElement('input');
+  var endPageInitialsInput = document.createElement('input');
   var submitButton = document.createElement('button');
-
-  submitButton.textContent = "Click to submit score";
-
   endPageTitle.textContent = "The quiz is over";
   endPageScore.textContent = ("Your Score was " + currentScore);
-
-  // if (currentScore > highScore){
-  //   highScore = currentScore;
-  //   endPageTitle.textContent = "The quiz is over";
-  //   endPageScore.textContent = ("You reached a new highscore of " + currentScore + "!");
-  // } else if (currentScore = highScore){
-  //   endPageTitle.textContent = "The quiz is over";
-  //   endPageScore.textContent = ("You matched the highscore of " + currentScore + "!");
-  // } else {
-  //   endPageTitle.textContent = "The quiz is over";
-  //   endPageScore.textContent = ("Your Score was " + currentScore);
-  // }
-
-  body.appendChild(endDiv);
+  submitButton.textContent = "Click to submit score";
   endDiv.appendChild(endPageTitle);
   endDiv.appendChild(endPageScore);
-  endDiv.appendChild(endPageInitials);
+  endDiv.appendChild(endPageInitialsInput);
   endDiv.appendChild(submitButton);
-  
-  endPageInitials.addEventListener('input', function () {
-    endPageInitials.textContent = this.value;
-  });
+  body.appendChild(endDiv);
 
+  endPageInitialsInput.addEventListener('input', function () {
+    endPageInitialsInput.textContent = this.value;
+  });
   submitButton.addEventListener("click", function() {
-    highScoreCheck();
+    endPageInitials = endPageInitialsInput.textContent;
     highScores();
-
-  });
-
-}
-
-function highScoreCheck(){
-  
-}
-
-function startQuiz(){
-  var timerText = document.getElementById('timer');
-  timerText.textContent = 'Time: 1 Minute';
-  timeLeft = 59;
-  questionCount = 1;
-  currentAnswer = 0;
-  currentScore = 0;
-  countdown(timeLeft);
-  textAppendQuestionDiv(0);
-}
-
-function startPage(){
-  var body = document.querySelector("main");
-  body.textContent = '';
-
-  var timerText = document.getElementById('timer');
-  timerText.textContent = 'Time: 1 Minute';
-
-  var startDiv = document.createElement("div");
-  var startTitle = document.createElement('h1');
-  var startMessage = document.createElement('h2');
-  var startButton = document.createElement('button');
-
-  startTitle.textContent = "Welcome to the Sports Quiz";
-  startMessage.textContent = "Click below to start quiz";
-  startButton.textContent = "Start";
-
-  body.appendChild(startDiv);
-  startDiv.appendChild(startTitle);
-  startDiv.appendChild(startMessage);
-  startDiv.appendChild(startButton);
-  startButton.addEventListener("click", function() {
-    startQuiz();
   });
 }
 
 function highScores(){
   var body = document.querySelector("main");
   body.textContent = '';
-
-  var currentScore = endQuiz(i);
-
-  console.log(currentScore);
-
   var highScoreDiv = document.createElement("div");
   var highScoreTitle = document.createElement('h1');
   var highScoreList = document.createElement('ol');
   var startButton = document.createElement('button');
-
-  highScoreTitle.textContent = "Highest Scores";
-  highScoreList.textContent = "Test";
+  highScore = localStorage.getItem("highScoreStorage");
+  if (currentScore > highScore){
+    highScore = currentScore;
+    localStorage.setItem("highScoreStorage", highScore);
+    localStorage.setItem("initialsStorage", endPageInitials);
+  } 
+  highScoreTitle.textContent = "Highest Score";
+  highScoreList.textContent = (localStorage.getItem("initialsStorage") + " - " + localStorage.getItem("highScoreStorage"))
   startButton.textContent = "Start Over";
-
   body.appendChild(highScoreDiv);
   highScoreDiv.appendChild(highScoreTitle);
   highScoreDiv.appendChild(highScoreList);
   highScoreDiv.appendChild(startButton);
-  
   startButton.addEventListener("click", function() {
     startPage();
   });
-
 }
 
 startPage();
