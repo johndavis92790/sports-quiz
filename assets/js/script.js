@@ -49,6 +49,7 @@ var questions = [{
   correctAnswer: 'Pittsburgh/Fiesta Bowl'
 }];
 
+//global variables
 var currentIndex = 0;
 var timeLeft;
 var currentAnswer;
@@ -57,11 +58,14 @@ var highScore;
 var endPageInitials;
 var viewHighScores = document.querySelector("#high-scores");
 
+//you can click on the view high scores button at any moment before or after the quiz
 viewHighScores.addEventListener("click", function() {
   highScores();
 });
 
+//first function that runs when you open the page
 function startPage(){
+  //creates div to display the start page
   var body = document.querySelector("main");
   body.textContent = '';
   var timerText = document.getElementById('timer');
@@ -70,18 +74,22 @@ function startPage(){
   var startTitle = document.createElement('h1');
   var startMessage = document.createElement('h2');
   var startButton = document.createElement('button');
+  //sets the text
   startTitle.textContent = "Welcome to the Utah Sports Quiz";
   startMessage.textContent = "Click below to start quiz";
   startButton.textContent = "Start";
+  //appends it to page to display
   body.appendChild(startDiv);
   startDiv.appendChild(startTitle);
   startDiv.appendChild(startMessage);
   startDiv.appendChild(startButton);
+  // user can click start button to start quiz
   startButton.addEventListener("click", function() {
     startQuiz();
   });
 }
 
+//countdown function to start running once the quiz starts, the user has 60 secs to finish
 function countdown(){
   var timerText = document.getElementById('timer');
 
@@ -93,11 +101,13 @@ function countdown(){
     } else if (timeLeft === 1) {
       timerText.textContent = 'Time: ' + timeLeft + ' second remaining';
       timeLeft--;
+      //if you finish the quiz early, it clears the interval and ends the quiz
     } else {
       if (currentIndex === questions.length){
         timerText.textContent = 'Times up!';
         clearInterval(timeInterval);
         endQuiz();
+        //once time is up, it clears the interval and ends the quiz
       } else {
         timerText.textContent = 'Times up!';
         clearInterval(timeInterval);
@@ -107,6 +117,7 @@ function countdown(){
   }, 1000);
 }
 
+//function to start the quiz, resets any needed variables, including timer
 function startQuiz(){
   var timerText = document.getElementById('timer');
   timerText.textContent = 'Time: 1 Minute';
@@ -118,6 +129,7 @@ function startQuiz(){
   questionDiv();
 }
 
+// function to create the quesitons and display them one at a time, including the answer buttons
 function questionDiv(){
   var body = document.querySelector("main");
   body.textContent = '';
@@ -125,34 +137,42 @@ function questionDiv(){
   var questionDiv = document.createElement("div");
   var questionTitle = document.createElement("h2");
   var answerList = document.createElement("ol");
+  //for loop to create the 4 buttons for each question being displayed
     for (var x = 0; x < currentQuestion.answer.length; x++){
       var answer = document.createElement("button");
       answer.textContent = currentQuestion.answer[x];
       answer.setAttribute("value", currentQuestion.answer[x]);
+      //appends everything to the page and waits for a user click of an answer
       answer.onclick = buttonClick;
       answerList.appendChild(answer);
     }
-    questionTitle.textContent = currentQuestion.question;
-    questionDiv.appendChild(questionTitle);
-    questionDiv.appendChild(answerList);
-    body.appendChild(questionDiv);
+  //appends everything to the page
+  questionTitle.textContent = currentQuestion.question;
+  questionDiv.appendChild(questionTitle);
+  questionDiv.appendChild(answerList);
+  body.appendChild(questionDiv);
 }
 
+//function with logic behind the answer chosen and keep score
 function buttonClick(){
+  // if the correct answer is chosen, it adds 1 to the current score
   if (this.value === questions[currentIndex].correctAnswer ){
     currentScore++;
+    //if its an incorrect answer, then it subtracts 10 secs from the current time left
   } else {
-    timeLeft - 10;
+    timeLeft = timeLeft - 10;
   }
+  //if either the time is up or the last question has been chosen, then is ends the quiz
   if (timeLeft <= 0 || currentIndex === questions.length - 1) {
     endQuiz();
-  } 
-  else {
+    // if there is still time left or its not the last question, then it goes to the next question
+  } else {
     currentIndex++;
     questionDiv()
   }
 }
 
+//function to end the quiz
 function endQuiz(){
   timeLeft = 0;
   var body = document.querySelector("main");
@@ -164,47 +184,58 @@ function endQuiz(){
   var endPageScore = document.createElement('h2');
   var endPageInitialsInput = document.createElement('input');
   var submitButton = document.createElement('button');
+  // Resets the divs on the page to display your score
   endPageTitle.textContent = "The quiz is over";
   endPageScore.textContent = ("Your Score was " + currentScore);
   submitButton.textContent = "Click to submit score";
+  //appends all this information to the page
   endDiv.appendChild(endPageTitle);
   endDiv.appendChild(endPageScore);
   endDiv.appendChild(endPageInitialsInput);
   endDiv.appendChild(submitButton);
   body.appendChild(endDiv);
-
+//grabs the string input from the input field to get the initials of the user
   endPageInitialsInput.addEventListener('input', function () {
     endPageInitialsInput.textContent = this.value;
   });
+  //when submit is clicked, it runs the high score function 
   submitButton.addEventListener("click", function() {
     endPageInitials = endPageInitialsInput.textContent;
     highScores();
   });
 }
 
+//funtion to check highscore and display the highest score
 function highScores(){
+  // Recreates the divs to display the highest score of all time
   var body = document.querySelector("main");
   body.textContent = '';
   var highScoreDiv = document.createElement("div");
   var highScoreTitle = document.createElement('h1');
   var highScoreList = document.createElement('ol');
   var startButton = document.createElement('button');
+  // checks local storage high score
   highScore = localStorage.getItem("highScoreStorage");
+  //if the current score is higher than the all time high score, then it resets the local 
+  //    storage of both the high score and the initials from the previous page
   if (currentScore > highScore){
     highScore = currentScore;
     localStorage.setItem("highScoreStorage", highScore);
     localStorage.setItem("initialsStorage", endPageInitials);
   } 
+
   highScoreTitle.textContent = "Highest Score";
   highScoreList.textContent = (localStorage.getItem("initialsStorage") + " - " + localStorage.getItem("highScoreStorage"))
   startButton.textContent = "Start Over";
+  //appends all this information to the page
   body.appendChild(highScoreDiv);
   highScoreDiv.appendChild(highScoreTitle);
   highScoreDiv.appendChild(highScoreList);
   highScoreDiv.appendChild(startButton);
+  // button to start over and go back to the start page
   startButton.addEventListener("click", function() {
     startPage();
   });
 }
-
+// initial function that runs
 startPage();
