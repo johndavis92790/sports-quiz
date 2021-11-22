@@ -25,7 +25,7 @@ var questions = [{
 },
 {
   question: 'What was the original price tag for the Jazz as an expansion franchise in 1974?',
-  answer: ['$1.5 million', '$6.1 million', '47.8 million', '$120.2 million'],
+  answer: ['$1.5 million', '$6.1 million', '$47.8 million', '$120.2 million'],
   correctAnswer: '$6.1 million'
 },
 {
@@ -70,6 +70,7 @@ function startPage(){
   body.textContent = '';
   var timerText = document.getElementById('timer');
   timerText.textContent = 'Time: 1 Minute';
+  timerText.setAttribute("style", "margin:20px; text-align:right; font-family: Arial, Helvetica, sans-serif");
   var startDiv = document.createElement("div");
   var startTitle = document.createElement('h1');
   var startMessage = document.createElement('h2');
@@ -78,6 +79,10 @@ function startPage(){
   startTitle.textContent = "Welcome to the Utah Sports Quiz";
   startMessage.textContent = "Click below to start quiz";
   startButton.textContent = "Start";
+  startDiv.setAttribute("style", "margin:auto; width:80%; text-align:center; font-family: Arial, Helvetica, sans-serif");
+  startButton.setAttribute("style",
+  "border-radius: 4px; background-color: #4CAF50; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px;"
+  );
   //appends it to page to display
   body.appendChild(startDiv);
   startDiv.appendChild(startTitle);
@@ -142,12 +147,16 @@ function questionDiv(){
       var answer = document.createElement("button");
       answer.textContent = currentQuestion.answer[x];
       answer.setAttribute("value", currentQuestion.answer[x]);
+      answer.setAttribute("style",
+  "border-radius: 4px; margin: 10px; background-color: #f44336; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; font-family: Arial, Helvetica, sans-serif"
+  );
       //appends everything to the page and waits for a user click of an answer
       answer.onclick = buttonClick;
       answerList.appendChild(answer);
     }
   //appends everything to the page
   questionTitle.textContent = currentQuestion.question;
+  questionDiv.setAttribute("style", "margin:auto; width:80%; text-align:center; font-family: Arial, Helvetica, sans-serif");
   questionDiv.appendChild(questionTitle);
   questionDiv.appendChild(answerList);
   body.appendChild(questionDiv);
@@ -188,7 +197,12 @@ function endQuiz(){
   endPageTitle.textContent = "The quiz is over";
   endPageScore.textContent = ("Your Score was " + currentScore);
   submitButton.textContent = "Click to submit score";
+  submitButton.setAttribute("style",
+  "font-size: 16px; margin: 10px; border-radius: 4px; background-color: #008CBA; border: none; color: white; padding: 15px 32px; text-align: center; font-family: Arial, Helvetica, sans-serif"
+  );
+  endPageInitialsInput.setAttribute("style","font-size: 16px; text-align: center; padding: 13px 25px; margin: 10px; border-radius: 4px; font-family: Arial, Helvetica, sans-serif");
   //appends all this information to the page
+  endDiv.setAttribute("style", "margin:auto; width:80%; text-align:center; font-family: Arial, Helvetica, sans-serif");
   endDiv.appendChild(endPageTitle);
   endDiv.appendChild(endPageScore);
   endDiv.appendChild(endPageInitialsInput);
@@ -228,6 +242,10 @@ function highScores(){
   highScoreList.textContent = (localStorage.getItem("initialsStorage") + " - " + localStorage.getItem("highScoreStorage"))
   startButton.textContent = "Start Over";
   //appends all this information to the page
+  highScoreDiv.setAttribute("style", "margin:auto; width:50%; text-align:center; font-family: Arial, Helvetica, sans-serif");
+  startButton.setAttribute("style",
+  "border-radius: 4px; background-color: #4CAF50; border: none; color: white; padding: 15px 32px; text-align: center; text-decoration: none; display: inline-block; font-size: 16px; font-family: Arial, Helvetica, sans-serif"
+  );
   body.appendChild(highScoreDiv);
   highScoreDiv.appendChild(highScoreTitle);
   highScoreDiv.appendChild(highScoreList);
